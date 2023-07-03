@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_manager/models/user.dart';
 import 'package:flutter_manager/screens/register.dart';
 import 'package:flutter_manager/apis/user_api.dart';
+import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -34,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
+  List<String> roles = [];
   var token;
   bool loading = false;
 
@@ -47,10 +49,14 @@ class _LoginPageState extends State<LoginPage> {
           UserModel(name: "", email: txtEmail.text, password: txtPassword.text);
       bool logged = false;
       api.login(user).then((value) {
+        roles = value.roles;
         token = value.tokenType + " " + value.accessToken;
         prefs.setString("token", token);
-
+        prefs.setString("roles", value.roles.join(","));
+        RoleUtil.ROLE = roles;
         TokenUtil.TOKEN = token;
+        print(token);
+        print(roles);
         logged = true;
 
         if (logged == true) {
