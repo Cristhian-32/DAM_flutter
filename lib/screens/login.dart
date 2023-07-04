@@ -37,6 +37,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController txtPassword = TextEditingController();
   List<String> roles = [];
   var token;
+  var name;
+  var email;
   bool loading = false;
 
   void _loginUser() async {
@@ -49,16 +51,23 @@ class _LoginPageState extends State<LoginPage> {
           UserModel(name: "", email: txtEmail.text, password: txtPassword.text);
       bool logged = false;
       api.login(user).then((value) {
+        name = value.profile.name;
+        email = value.profile.email;
         roles = value.roles;
         token = value.tokenType + " " + value.accessToken;
         prefs.setString("token", token);
         prefs.setString("roles", value.roles.join(","));
+        prefs.setString("name", name);
+        prefs.setString("email", email);
+        ProfileUtil.NAME = name;
+        ProfileUtil.EMAIL = email;
         RoleUtil.ROLE = roles;
         TokenUtil.TOKEN = token;
+        print(name);
+        print(email);
         print(token);
         print(roles);
         logged = true;
-
         if (logged == true) {
           print("si se logeo");
 
