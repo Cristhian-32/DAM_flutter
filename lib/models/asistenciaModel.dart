@@ -5,6 +5,7 @@ class AsistenciaModel {
   late int activityId;
   late String code;
   late String level;
+  late String date;
 
   AsistenciaModel(
       {required this.activityId, required this.code, required this.level});

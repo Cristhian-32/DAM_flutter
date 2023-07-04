@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_manager/screens/drawner/AppBar.dart';
 
 class ActividadScreen extends StatelessWidget {
   ActividadScreen(String s);
@@ -6,8 +7,8 @@ class ActividadScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('actividad'),
+      appBar: CustomAppBar(
+        title: 'actividad',
       ),
       body: Center(
         child: Text(
