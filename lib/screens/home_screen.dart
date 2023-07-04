@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.only(bottom: 100),
+        padding: EdgeInsets.only(bottom: 80),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -52,8 +52,7 @@ class HomeScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ActividadScreen('Título de la actividad'),
+                      builder: (context) => ActividadScreen(),
                     ),
                   );
                 },
