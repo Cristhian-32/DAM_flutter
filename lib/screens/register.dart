@@ -57,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _redirectToHome() async {
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => MainLogin()), (route) => false);
+        MaterialPageRoute(builder: (context) => LoginPage()), (route) => false);
   }
 
   @override

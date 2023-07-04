@@ -8,20 +8,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_manager/screens/home_screen.dart';
 
-class MainLogin extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Provider<UserApi>(
-      create: (_) => UserApi.create(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.blue),
-        home: const LoginPage(),
-      ),
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
