@@ -1,7 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_manager/apis/user_api.dart';
+import 'package:flutter_manager/models/user.dart';
 import 'package:flutter_manager/screens/tables/actividad.dart';
+import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
+import 'package:flutter_manager/util/RoleUtil.dart';
+import 'package:flutter_manager/util/TokenUtil.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  var txtName = ProfileUtil.NAME;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +44,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '¡Bienvenido! Nombre del usuario',
+                '¡Bienvenido! ${txtName}',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -58,20 +71,31 @@ class HomeScreen extends StatelessWidget {
                 },
               ),
               SizedBox(height: 10),
-              ActionCard(
-                title: 'ASISTENCIA',
-                description: 'Podras LISTAR asistencia de tus eventos',
-                onPressed: () {
-                  // Acción para la acción 2
-                },
+              Visibility(
+                visible: RoleGuard.isAdviser(),
+                child: ActionCard(
+                  title: 'ASISTENCIA',
+                  description: 'Podras LISTAR asistencia de tus eventos',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AsistenciaScreen(),
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 10),
-              ActionCard(
-                title: 'Acción 3',
-                description: 'Descripción de 5 palabras',
-                onPressed: () {
-                  // Acción para la acción 3
-                },
+              Visibility(
+                visible: RoleGuard.isUser(),
+                child: ActionCard(
+                  title: 'Acción 3',
+                  description: 'Descripción de 5 palabras',
+                  onPressed: () {
+                    // Acción para la acción 3
+                  },
+                ),
               ),
             ],
           ),

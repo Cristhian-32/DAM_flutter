@@ -31,16 +31,18 @@ class TokenModel {
   String accessToken;
   String tokenType;
   String expiresAt;
-  //String roles;
+  List<String> roles;
+  ProfileModel profile;
+  //String name;
 
   TokenModel(
       {required this.status,
       required this.message,
       required this.accessToken,
       required this.tokenType,
-      required this.expiresAt
-      //required this.roles
-      });
+      required this.expiresAt,
+      required this.roles,
+      required this.profile});
 
   factory TokenModel.fromJson(Map<String, dynamic> json) {
     return TokenModel(
@@ -49,7 +51,8 @@ class TokenModel {
       accessToken: json['access_token'],
       tokenType: json['token_type'],
       expiresAt: json['expires_at'],
-      //roles: json['roles'],
+      roles: List<String>.from(json['roles']),
+      profile: ProfileModel.fromJson(json['profile']),
     );
   }
   Map<String, dynamic> toJson() {
@@ -59,7 +62,33 @@ class TokenModel {
       'access_token': accessToken,
       'token_type': tokenType,
       'expires_at': expiresAt,
-      //'roles': roles,
+      'roles': roles,
+      'profile': profile.toJson(),
+    };
+  }
+}
+
+@JsonSerializable()
+class ProfileModel {
+  String name;
+  String email;
+
+  ProfileModel({
+    required this.name,
+    required this.email,
+  });
+
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
+      name: json['name'],
+      email: json['email'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': name,
+      'email': email,
     };
   }
 }
