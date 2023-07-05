@@ -13,7 +13,7 @@ class _AsistenciaApi implements AsistenciaApi {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://172.22.208.1:8000/';
+    baseUrl ??= 'http://192.168.1.35:8000/';
   }
 
   final Dio _dio;
@@ -90,7 +90,7 @@ class _AsistenciaApi implements AsistenciaApi {
     )
             .compose(
               _dio.options,
-              '/api/act/${id}',
+              '/api/asistencias/${id}',
               queryParameters: queryParameters,
               data: _data,
             )
