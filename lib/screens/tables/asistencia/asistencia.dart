@@ -75,19 +75,19 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
               backgroundColor: Colors.green),
           SizedBox(height: 10),
           FloatingActionButton(
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AsistenciaForm(),
-                ),
-              );
-              if (result == true) {
-                setState(() {});
-              }
-            },
-            child: Icon(Icons.add),
-          ),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AsistenciaForm(),
+                  ),
+                );
+                if (result == true) {
+                  setState(() {});
+                }
+              },
+              child: Icon(Icons.add),
+              backgroundColor: Colors.green),
         ],
       ),
     );

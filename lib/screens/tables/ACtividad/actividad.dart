@@ -162,14 +162,43 @@ class _ActividadScreenState extends State<ActividadScreen> {
   }
 
   void _deleteActividad(BuildContext context, int id) {
-    final actividadApi = Provider.of<ActividadApi>(context, listen: false);
-    final token = TokenUtil.TOKEN;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirmación'),
+          content: Text('¿Estás seguro de que deseas eliminar esta actividad?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Cerrar el diálogo
+              },
+              child: Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                final actividadApi =
+                    Provider.of<ActividadApi>(context, listen: false);
+                final token = TokenUtil.TOKEN;
 
-    actividadApi.deleteActividad(token, id).then((response) {
-      // Aquí puedes manejar la respuesta de la API después de eliminar la actividad
-    }).catchError((error) {
-      // Aquí puedes manejar los errores en caso de que ocurra algún problema en la solicitud
-    });
+                actividadApi.deleteActividad(token, id).then((response) {
+                  // Aquí puedes manejar la respuesta de la API después de eliminar la actividad
+                }).catchError((error) {
+                  // Aquí puedes manejar los errores en caso de que ocurra algún problema en la solicitud
+                });
+
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ActividadScreen())); // Cerrar el diálogo
+              },
+              child: Text('Confirmar'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
