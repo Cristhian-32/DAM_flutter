@@ -3,6 +3,7 @@ import 'package:flutter_manager/screens/drawner/AppBar.dart';
 import 'package:flutter_manager/screens/drawner/NavBar.dart';
 import 'package:flutter_manager/screens/tables/actividad.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
+import 'package:flutter_manager/screens/tables/record/record.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 
@@ -64,6 +65,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => AsistenciaScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox(height: 10),
+              Visibility(
+                visible: RoleGuard.isAdviser(),
+                child: ActionCard(
+                  title: 'RECORD',
+                  description: 'Listar RECORDS',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RecordsScreen(),
                       ),
                     );
                   },

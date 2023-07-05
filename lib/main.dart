@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/activity_api.dart';
 import 'package:flutter_manager/apis/asistencia_api.dart';
+import 'package:flutter_manager/apis/record_api.dart';
 import 'package:flutter_manager/apis/user_api.dart';
 import 'package:flutter_manager/screens/loading.dart';
 import 'package:flutter_manager/screens/login.dart';
