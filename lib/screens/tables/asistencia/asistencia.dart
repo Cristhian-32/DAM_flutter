@@ -159,15 +159,16 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
   Future<void> _deleteAsistencia(
       BuildContext context, AsistenciaModel asistencia) async {
     final asistenciaApi = Provider.of<AsistenciaApi>(context, listen: false);
-    final response =
-        await asistenciaApi.delete(TokenUtil.TOKEN, asistencia.id);
+    final response =await asistenciaApi.delete(TokenUtil.TOKEN, asistencia.id);
     if (response.success) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Asistencia eliminada exitosamente'),
       ));
-      Provider.of<AsistenciaApi>(context, listen: false)
+      Navigator.of(context).pop();
+      onGoBack("Eliminado");
+     /* Provider.of<AsistenciaApi>(context, listen: false)
           .index(TokenUtil.TOKEN)
-          .then((value) => onGoBack(value));
+          .then((value) => onGoBack(value));*/
           
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -205,8 +206,7 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
     await Share.shareFiles([path], text: 'Exportar a CSV');
   }
 
-  void _navigateToAsistenciaForm(
-      BuildContext context, AsistenciaModel? asistencia) {
+  void _navigateToAsistenciaForm( BuildContext context, AsistenciaModel? asistencia) {
     Navigator.push(
       context,
       MaterialPageRoute(
