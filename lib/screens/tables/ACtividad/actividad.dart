@@ -6,10 +6,20 @@ import 'package:flutter_manager/screens/tables/ACtividad/ActividadEdit.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:excel/excel.dart';
+import 'package:path_provider/path_provider.dart';
 
-class ActividadScreen extends StatelessWidget {
-  late final LocalAuthentication auth;
-  bool _supportState = false;
+import 'dart:io';
+
+class ActividadScreen extends StatefulWidget {
+  const ActividadScreen({super.key});
+
+  @override
+  State<ActividadScreen> createState() => _ActividadScreenState();
+}
+
+class _ActividadScreenState extends State<ActividadScreen> {
+  List<ActividadModelo> actividade = [];
   final List<Color> colors = [
     Color(0xFFC5E1A5), // Verde pastel
     Color(0xFFFFCC80), // Naranja pastel
@@ -45,6 +55,21 @@ class ActividadScreen extends StatelessWidget {
               );
             }
           },
+        ),
+      ),
+      floatingActionButton: Container(
+        width: 70,
+        height: 70,
+        child: FloatingActionButton(
+          onPressed: () {
+            exportAsistenciaToExcel(actividade);
+            // Lógica para el botón flotante
+          },
+          child: Icon(Icons.explicit_outlined, size: 40),
+          backgroundColor: Colors.green,
+          heroTag: null,
+          elevation: 6.0,
+          mini: false,
         ),
       ),
     );
@@ -145,5 +170,64 @@ class ActividadScreen extends StatelessWidget {
     }).catchError((error) {
       // Aquí puedes manejar los errores en caso de que ocurra algún problema en la solicitud
     });
+  }
+}
+
+void exportAsistenciaToExcel(List<ActividadModelo> actividad) {
+  // Crear un nuevo archivo Excel
+  var excel = Excel.createExcel();
+
+  // Crear una nueva hoja en el archivo Excel
+  Sheet sheetObject = excel['Asistencia'];
+
+  // Escribir los encabezados de columna en la primera fila
+  List<String> headers = ['Código', 'Semestre', 'Fecha'];
+  for (var col = 0; col < headers.length; col++) {
+    CellIndex cellIndex =
+        CellIndex.indexByColumnRow(columnIndex: col, rowIndex: 0);
+    sheetObject.cell(cellIndex).value = headers[col];
+  }
+
+  // Escribir los datos de asistencia en las filas siguientes
+  for (var row = 0; row < actividad.length; row++) {
+    ActividadModelo actividadx = actividad[row];
+    sheetObject
+        .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: row + 1))
+        .value = actividadx.title;
+    sheetObject
+        .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: row + 1))
+        .value = actividadx.body;
+    sheetObject
+        .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: row + 1))
+        .value = actividadx.date;
+  }
+
+  // Guardar el archivo Excel en el sistema de archivos
+  saveExcel(excel, 'Actividades.xlsx');
+}
+
+Future<void> saveExcel(Excel excel, String fileName) async {
+  try {
+    var bytes = excel.encode();
+    var dir = await getExternalStorageDirectory();
+
+    if (dir != null) {
+      print('Directorio de almacenamiento externo: ${dir.path}');
+
+      var file = File('${dir.path}/$fileName');
+
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+
+      await file.writeAsBytes(
+          bytes!); // Conversión explícita para asegurar que bytes no sea nulo
+
+      print('Archivo guardado correctamente en: ${file.path}');
+    } else {
+      print('No se pudo obtener el directorio de almacenamiento externo');
+    }
+  } catch (e) {
+    print('Error al guardar el archivo Excel: $e');
   }
 }
