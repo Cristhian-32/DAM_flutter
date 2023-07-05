@@ -3,6 +3,8 @@ import 'package:flutter_manager/screens/drawner/AppBar.dart';
 import 'package:flutter_manager/screens/drawner/NavBar.dart';
 import 'package:flutter_manager/screens/tables/ACtividad/actividad.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
+import 'package:flutter_manager/screens/tables/asistencia/er.dart';
+import 'package:flutter_manager/ui/help_screen.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 
@@ -41,17 +43,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              ActionCard(
-                title: 'ACTIVIDADES O EVENTOS',
-                description: 'Podras CREAR Actividades o Eventos',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ActividadScreen(),
-                    ),
-                  );
-                },
+              Visibility(
+                visible: RoleGuard.isAdviser(),
+                child: ActionCard(
+                  title: 'ACTIVIDADES O EVENTOS',
+                  description: 'Podras CREAR Actividades o Eventos',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ActividadScreen(),
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 10),
               Visibility(
@@ -60,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: 'ASISTENCIA',
                   description: 'Podras LISTAR asistencia de tus eventos',
                   onPressed: () {
+                    print("object");
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -73,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Visibility(
                 visible: RoleGuard.isUser(),
                 child: ActionCard(
-                  title: 'Acción 3',
-                  description: 'Descripción de 5 palabras',
+                  title: 'ESTUDIANTES',
+                  description: 'Registra tu asistencia, MUY PRONTO',
                   onPressed: () {
                     // Acción para la acción 3
                   },

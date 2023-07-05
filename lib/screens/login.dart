@@ -1,163 +1,238 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_manager/models/user.dart';
-import 'package:flutter_manager/screens/register.dart';
 import 'package:flutter_manager/apis/user_api.dart';
+import 'package:flutter_manager/models/user.dart';
+import 'package:flutter_manager/screens/home_screen.dart';
+import 'package:flutter_manager/screens/register.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_manager/screens/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  void logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.clear(); // Borrar todos los datos almacenados
+
+    // Restablecer los valores en las utilidades
+    ProfileUtil.NAME = "";
+    ProfileUtil.EMAIL = "";
+    RoleUtil.ROLE = [" "];
+    TokenUtil.TOKEN = "";
+
+    // Navegar a la pantalla de inicio de sesión
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isLoggedIn = false;
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController txtEmail = TextEditingController();
-  TextEditingController txtPassword = TextEditingController();
-  List<String> roles = [];
-  var token;
-  var name;
-  var email;
-  bool loading = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _loading = false;
 
   void _loginUser() async {
-    if (_formKey.currentState!.validate()) {
-      print("Usuario: ${txtEmail} clave:${txtPassword}");
+    final String email = _emailController.text.trim();
+    final String password = _passwordController.text.trim();
 
-      final prefs = await SharedPreferences.getInstance();
+    if (email.isNotEmpty && password.isNotEmpty) {
       final api = Provider.of<UserApi>(context, listen: false);
-      final user =
-          UserModel(name: "", email: txtEmail.text, password: txtPassword.text);
-      bool logged = false;
-      api.login(user).then((value) {
-        name = value.profile.name;
-        email = value.profile.email;
-        roles = value.roles;
-        token = value.tokenType + " " + value.accessToken;
+      final user = UserModel(name: "", email: email, password: password);
+
+      setState(() {
+        _loading = true;
+      });
+
+      try {
+        final value = await api.login(user);
+        final prefs = await SharedPreferences.getInstance();
+
+        final name = value.profile.name;
+        final email = value.profile.email;
+        final roles = value.roles;
+        final token = value.tokenType + " " + value.accessToken;
+
         prefs.setString("token", token);
-        prefs.setString("roles", value.roles.join(","));
+        prefs.setString("roles", roles.join(","));
         prefs.setString("name", name);
         prefs.setString("email", email);
+
         ProfileUtil.NAME = name;
         ProfileUtil.EMAIL = email;
         RoleUtil.ROLE = roles;
         TokenUtil.TOKEN = token;
+
         print(name);
         print(email);
         print(token);
         print(roles);
-        logged = true;
-        if (logged == true) {
-          print("si se logeo");
 
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-        }
-      }).catchError((onError) {
-        print(onError.toString());
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('${onError.toString()}')));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } catch (error) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.toString())),
+        );
+      } finally {
         setState(() {
-          loading = false;
+          _loading = false;
         });
-      });
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-        centerTitle: true,
-      ),
-      body: Form(
-          key: _formKey,
-          child: ListView(
-            padding: EdgeInsets.all(32),
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/login.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Stack(
             children: [
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                controller: txtEmail,
-                validator: (val) =>
-                    val!.isEmpty ? 'Credenciales Incorrectas' : null,
-                decoration: const InputDecoration(
-                    labelText: 'Correo',
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.black))),
+              Container(),
+              Container(
+                padding: const EdgeInsets.only(left: 35, top: 130),
+                child: Text(
+                  'Bienvenido\nde Nuevo',
+                  style: TextStyle(color: Colors.white, fontSize: 33),
+                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                obscureText: true,
-                controller: txtPassword,
-                validator: (val) =>
-                    val!.isEmpty ? 'Requiere minimo 6 caracteres' : null,
-                decoration: const InputDecoration(
-                    labelText: 'Contraseña',
-                    contentPadding: EdgeInsets.all(10),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1, color: Colors.black))),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              loading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : TextButton(
-                      child: Text(
-                        'Ingresar',
-                        style: TextStyle(color: Colors.white),
+              SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.5,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 35, right: 35),
+                        child: Column(
+                          children: [
+                            TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              controller: _emailController,
+                              style: const TextStyle(color: Colors.black),
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey.shade100,
+                                filled: true,
+                                hintText: 'Correo',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            TextField(
+                              controller: _passwordController,
+                              style: const TextStyle(),
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                fillColor: Colors.grey.shade100,
+                                filled: true,
+                                hintText: 'Contraseña',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 40),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Recordar',
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                                Checkbox(
+                                  value: false,
+                                  onChanged: (value) {},
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Ingresar',
+                                  style: TextStyle(
+                                    fontSize: 27,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: const Color(0xff4c505b),
+                                  child: IconButton(
+                                    color: Colors.white,
+                                    onPressed: _loginUser,
+                                    icon: const Icon(Icons.arrow_forward),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 40),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                RegisterPage()),
+                                        (route) => false);
+                                  },
+                                  child: const Text(
+                                    'Registrarse',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Color(0xff4c505b),
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  style: ButtonStyle(),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: const Text(
+                                    '¿Has olvidado\ntu contraseña?',
+                                    style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Color(0xff4c505b),
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateColor.resolveWith(
-                              (states) => Colors.blue),
-                          padding: MaterialStateProperty.resolveWith(
-                              (states) => EdgeInsets.symmetric(vertical: 10))),
-                      onPressed: () async {
-                        if (txtEmail.text.isNotEmpty &&
-                            txtPassword.text.isNotEmpty) {
-                          setState(() {
-                            loading = true;
-                            _loginUser();
-                          });
-                        }
-                      },
-                    ),
-              SizedBox(
-                height: 10,
+                    ],
+                  ),
+                ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('No tienes cuenta? '),
-                  GestureDetector(
-                    child: Text('Registrate',
-                        style: TextStyle(color: Colors.blue)),
-                    onTap: () {
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                              builder: (context) => RegisterPage()),
-                          (route) => false);
-                    },
-                  )
-                ],
-              )
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
