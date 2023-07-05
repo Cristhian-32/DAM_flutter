@@ -2,14 +2,14 @@ import 'package:json_annotation/json_annotation.dart';
 
 @JsonSerializable()
 class AsistenciaModel {
-  late int id;
+  late int id = 0;
   late int activityId;
   late String code;
   late String level;
-  //late String date;
+  late String date;
 
   AsistenciaModel(
-      {required this.id, required this.activityId, required this.code, required this.level});
+      { required this.activityId, required this.code, required this.level});
 
   AsistenciaModel.unlaunched();
 
@@ -18,6 +18,7 @@ class AsistenciaModel {
     activityId = json['activity_id'];
     code = json['code'];
     level = json['level'];
+    date = json['date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -26,6 +27,7 @@ class AsistenciaModel {
     data['activity_id'] = this.activityId;
     data['code'] = this.code;
     data['level'] = this.level;
+    data['date'] = this.date;
     return data;
   }
 }

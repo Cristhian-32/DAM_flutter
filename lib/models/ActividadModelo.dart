@@ -8,12 +8,10 @@ class ActividadModelo {
   /*late List<AsistenciapaModelo> asistenciapas;*/
 
   ActividadModelo({
-    required this.id,
-    required this.user_id,
     required this.title,
     required this.body,
     required this.date,
-    required this.image,
+
     //required this.asistenciapas
   });
   ActividadModelo.unlaunched();
@@ -57,12 +55,16 @@ class RespActividadModelo {
   late List<ActividadModelo> data;
   late String message;
 
-  RespActividadModelo(
-      {required this.success, required this.data, required this.message});
+  RespActividadModelo({
+    required this.success,
+    required this.data,
+    required this.message,
+  });
+
   RespActividadModelo.unlaunched();
 
   RespActividadModelo.fromJson(Map<String, dynamic> json) {
-    success = json['success'] == true.toString(); // Convertir a bool
+    success = json['success'];
     data = (json['data'] as List)
         .map((e) => ActividadModelo.fromJson(e as Map<String, dynamic>))
         .toList();

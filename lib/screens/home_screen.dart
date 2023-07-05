@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: CustomNavBar(),
-      appBar: CustomAppBar(title: 'Inicios'),
+      appBar: CustomAppBar(title: 'Inicio'),
       body: Padding(
         padding: EdgeInsets.only(bottom: 80),
         child: Center(
