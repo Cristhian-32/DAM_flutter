@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/user_api.dart';
 import 'package:flutter_manager/models/user.dart';
-import 'package:flutter_manager/screens/tables/actividad.dart';
+import 'package:flutter_manager/screens/tables/ACtividad/actividad.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
