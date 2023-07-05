@@ -16,7 +16,7 @@ abstract class AsistenciaApi {
   }
 
   @GET("/api/asistencias")
-  Future<RespAsistenciaModel> index(@Header("Authorizacion") String token);
+  Future<RespAsistenciaModel> index(@Header("Authorization") String token);
 
   @POST("/api/asistencias")
   Future<RespAsistenciaModel> store(@Header("Authorization") String token,

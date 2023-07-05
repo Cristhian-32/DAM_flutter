@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/activity_api.dart';
 import 'package:flutter_manager/models/ActividadModelo.dart';
+import 'package:flutter_manager/screens/drawner/AppBar.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 
 class ActividadScreen extends StatefulWidget {
@@ -61,8 +62,8 @@ class _ActividadScreenState extends State<ActividadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Actividades'),
+      appBar: CustomAppBar(
+        title: 'Actividades',
       ),
       body: ListView.builder(
         itemCount: actividades.length,

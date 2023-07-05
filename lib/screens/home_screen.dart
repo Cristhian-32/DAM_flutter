@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_manager/apis/user_api.dart';
-import 'package:flutter_manager/models/user.dart';
+import 'package:flutter_manager/screens/drawner/AppBar.dart';
+import 'package:flutter_manager/screens/drawner/NavBar.dart';
 import 'package:flutter_manager/screens/tables/ACtividad/actividad.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
@@ -18,25 +18,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Instituciones Name'),
-        backgroundColor: Color.fromARGB(255, 71, 196, 22),
-        // Cambiar el color del AppBar
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Lógica al presionar el botón de búsqueda
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: () {
-              // Lógica al presionar el botón de notificaciones
-            },
-          ),
-        ],
-      ),
+      drawer: CustomNavBar(),
+      appBar: CustomAppBar(title: 'Inicios'),
       body: Padding(
         padding: EdgeInsets.only(bottom: 80),
         child: Center(
