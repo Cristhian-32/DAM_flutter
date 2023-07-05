@@ -41,17 +41,20 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 20),
-              ActionCard(
-                title: 'ACTIVIDADES O EVENTOS',
-                description: 'Podras CREAR Actividades o Eventos',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ActividadScreen(),
-                    ),
-                  );
-                },
+              Visibility(
+                visible: RoleGuard.isAdviser(),
+                child: ActionCard(
+                  title: 'ACTIVIDADES O EVENTOS',
+                  description: 'Podras CREAR Actividades o Eventos',
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ActividadScreen(),
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(height: 10),
               Visibility(
@@ -73,8 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Visibility(
                 visible: RoleGuard.isUser(),
                 child: ActionCard(
-                  title: 'Acción 3',
-                  description: 'Descripción de 5 palabras',
+                  title: 'ESTUDIANTES',
+                  description: 'Registra tu asistencia, MUY PRONTO',
                   onPressed: () {
                     // Acción para la acción 3
                   },
