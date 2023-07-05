@@ -14,6 +14,7 @@ abstract class ActividadApi {
     return ActividadApi(dio);
   }
 
+/**/
   @GET("/api/activities")
   Future<RespActividadModelo> getActividad(
       @Header("Authorization") String token);
