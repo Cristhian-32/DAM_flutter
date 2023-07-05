@@ -1,83 +1,89 @@
-import 'dart:io';
-import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:excel/excel.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'dart:io';
 import 'package:flutter_manager/apis/asistencia_api.dart';
 import 'package:flutter_manager/models/asistenciaModel.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistenciaForm.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:path_provider/path_provider.dart';
 
 class AsistenciaScreen extends StatefulWidget {
+  const AsistenciaScreen({Key? key});
+
   @override
-  _AsistenciaScreenState createState() => _AsistenciaScreenState();
+  State<AsistenciaScreen> createState() => _AsistenciaScreenState();
 }
 
 class _AsistenciaScreenState extends State<AsistenciaScreen> {
-  @override
-  void initState() {
-    super.initState();
-
-  }
-  Future onGoBack(dynamic value) async {
-    setState(() {
-      print(value);
-    });
-  } 
+  List<AsistenciaModel> asistencia = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Lista de Asistencias'),
       ),
-      body: Builder(
-        builder: (context) => FutureBuilder<List<AsistenciaModel>>(
-          future: Provider.of<AsistenciaApi>(context, listen: true)
-              .index(TokenUtil.TOKEN)
-              .then((value) => value.data),
-          builder: (BuildContext context,
-              AsyncSnapshot<List<AsistenciaModel>> snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                    "Something wrong with message: ${snapshot.error.toString()}"),
-              );
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              List<AsistenciaModel> asistencia = snapshot.data!!;
-              return _buildListView(context, asistencia);
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Builder(
+              builder: (context) => FutureBuilder<List<AsistenciaModel>>(
+                future: Provider.of<AsistenciaApi>(context, listen: true)
+                    .index(TokenUtil.TOKEN)
+                    .then((value) => value.data),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<AsistenciaModel>> snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Algo salió mal: ${snapshot.error.toString()}",
+                      ),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    List<AsistenciaModel> asistencia = snapshot.data!;
+                    print(asistencia.length);
+                    return _buildListView(asistencia);
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Lógica para exportar a Excel
+                exportAsistenciaToExcel(asistencia);
+              },
+              child: Text('Exportar a Excel'),
+            ),
+          ],
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              _exportAsistencia(context);
-            },
-            child: Icon(Icons.share),
-          ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              _navigateToAsistenciaForm(context, null); // Agregar nueva asistencia
-            },
-            child: Icon(Icons.add),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AsistenciaForm(),
+            ),
+          );
+          if (result == true) {
+            setState(() {});
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
 
-  Widget _buildListView(BuildContext context, List<AsistenciaModel> asistencia) {
+  Widget _buildListView(List<AsistenciaModel> asistencia) {
     return ListView.builder(
       itemCount: asistencia.length,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         AsistenciaModel asistenciax = asistencia[index];
         return ListTile(
@@ -90,140 +96,121 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Nivel: ${asistenciax.level}',
+                'Semestre: ${asistenciax.level}',
+                style: TextStyle(fontSize: 16),
+              ),
+              Text(
+                'Fecha: ${asistenciax.date}',
                 style: TextStyle(fontSize: 16),
               ),
             ],
           ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  _navigateToAsistenciaForm(context, asistenciax); // Editar asistencia
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  _showDeleteConfirmationDialog(context, asistenciax);
-                },
-              ),
-            ],
+          trailing: IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              _deleteAsistencia(context, asistenciax.id);
+            },
           ),
-          onTap: () {
-            _navigateToAsistenciaForm(context, asistenciax); // Editar asistencia
-          },
         );
       },
     );
   }
 
-  Future<void> _showDeleteConfirmationDialog(
-      BuildContext context, AsistenciaModel asistencia) async {
-    return showDialog<void>(
+  void _deleteAsistencia(BuildContext context, int asistenciaId) {
+    showDialog(
       context: context,
-      barrierDismissible: false,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmar eliminación'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('¿Estás seguro de eliminar esta asistencia?'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
+          title: Text("Confirmación"),
+          content: Text("¿Deseas eliminar esta asistencia?"),
+          actions: [
             TextButton(
               child: Text('Cancelar'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
-            TextButton(
+            ElevatedButton(
               child: Text('Eliminar'),
-              onPressed: () {
-                _deleteAsistencia(context, asistencia);
-                
+              onPressed: () async {
+                Navigator.of(context).pop();
+                // Lógica para eliminar la asistencia utilizando la API correspondiente
+                try {
+                  // Llama a la API para eliminar la asistencia utilizando el asistenciaId
+                  await Provider.of<AsistenciaApi>(context, listen: false)
+                      .delete(TokenUtil.TOKEN, asistenciaId);
+
+                  // Realiza cualquier otra acción necesaria después de eliminar la asistencia
+                } catch (error) {
+                  // Maneja cualquier error que pueda ocurrir durante la eliminación
+                  print('Error al eliminar la asistencia: $error');
+                }
+                setState(() {});
               },
             ),
           ],
         );
       },
     );
-  
   }
 
-  Future<void> _deleteAsistencia(
-      BuildContext context, AsistenciaModel asistencia) async {
-    final asistenciaApi = Provider.of<AsistenciaApi>(context, listen: false);
-    final response =
-        await asistenciaApi.delete(TokenUtil.TOKEN, asistencia.id);
-    if (response.success) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Asistencia eliminada exitosamente'),
-      ));
-      Provider.of<AsistenciaApi>(context, listen: false)
-          .index(TokenUtil.TOKEN)
-          .then((value) => onGoBack(value));
-          
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error al eliminar la asistencia'),
-      ));
-    }
-  }
+  void exportAsistenciaToExcel(List<AsistenciaModel> asistencia) {
+    // Crear un nuevo archivo Excel
+    var excel = Excel.createExcel();
 
-  Future<void> _exportAsistencia(BuildContext context) async {
-    final asistenciaApi = Provider.of<AsistenciaApi>(context, listen: false);
-    final response = await asistenciaApi.index(TokenUtil.TOKEN);
-    if (response.success) {
-      final asistencia = response.data;
-      await _exportToCSV(asistencia);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Error al exportar la asistencia'),
-      ));
-    }
-  }
+    // Crear una nueva hoja en el archivo Excel
+    Sheet sheetObject = excel['Asistencia'];
 
-  Future<void> _exportToCSV(List<AsistenciaModel> asistencia) async {
-    List<List<dynamic>> rows = [];
-    rows.add(['Código', 'Nivel']);
-    for (var asistenciax in asistencia) {
-      rows.add([asistenciax.code, asistenciax.level]);
+    // Escribir los encabezados de columna en la primera fila
+    List<String> headers = ['Código', 'Semestre', 'Fecha'];
+    for (var col = 0; col < headers.length; col++) {
+      CellIndex cellIndex =
+          CellIndex.indexByColumnRow(columnIndex: col, rowIndex: 0);
+      sheetObject.cell(cellIndex).value = headers[col];
     }
 
-    final csvData = ListToCsvConverter().convert(rows);
-    final directory = await getApplicationDocumentsDirectory();
-    final path = '${directory.path}/asistencias.csv';
-    final file = File(path);
-    await file.writeAsString(csvData);
+    // Escribir los datos de asistencia en las filas siguientes
+    for (var row = 0; row < asistencia.length; row++) {
+      AsistenciaModel asistenciax = asistencia[row];
+      sheetObject
+          .cell(CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: row + 1))
+          .value = asistenciax.code;
+      sheetObject
+          .cell(CellIndex.indexByColumnRow(columnIndex: 1, rowIndex: row + 1))
+          .value = asistenciax.level;
+      sheetObject
+          .cell(CellIndex.indexByColumnRow(columnIndex: 2, rowIndex: row + 1))
+          .value = asistenciax.date;
+    }
 
-    await Share.shareFiles([path], text: 'Exportar a CSV');
+    // Guardar el archivo Excel en el sistema de archivos
+    saveExcel(excel, 'asistencia.xlsx');
   }
 
-  void _navigateToAsistenciaForm(
-      BuildContext context, AsistenciaModel? asistencia) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AsistenciaForm(asistencia: asistencia), // Cambiar a AsistenciaForm
-      ),
-    ).then((value) {
-      if (value != null) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Asistencia actualizada exitosamente'),
-        ));
-        Provider.of<AsistenciaApi>(context, listen: false)
-            .index(TokenUtil.TOKEN)
-            .then((value) {
-          setState(() {}); // Actualizar el estado para refrescar la lista de asistencias
-        });
+  Future<void> saveExcel(Excel excel, String fileName) async {
+    try {
+      var bytes = excel.encode();
+      var dir = await getExternalStorageDirectory();
+
+      if (dir != null) {
+        print('Directorio de almacenamiento externo: ${dir.path}');
+
+        var file = File('${dir.path}/$fileName');
+
+        if (!await dir.exists()) {
+          await dir.create(recursive: true);
+        }
+
+        await file.writeAsBytes(
+            bytes!); // Conversión explícita para asegurar que bytes no sea nulo
+
+        print('Archivo guardado correctamente en: ${file.path}');
+      } else {
+        print('No se pudo obtener el directorio de almacenamiento externo');
       }
-    });
+    } catch (e) {
+      print('Error al guardar el archivo Excel: $e');
+    }
   }
-  
 }

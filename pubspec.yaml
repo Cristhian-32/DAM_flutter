@@ -32,6 +32,8 @@ dependencies:
   flutter:
     sdk: flutter
   
+  excel: ^2.0.2
+  
   
   logger: any  #for logging purpose
 
