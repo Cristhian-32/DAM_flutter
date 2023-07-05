@@ -1,6 +1,6 @@
 class ActividadModelo {
   late int id = 0;
-  //late int userId;
+  late int user_id;
   late String title;
   late String body;
   late String date;
@@ -9,6 +9,7 @@ class ActividadModelo {
 
   ActividadModelo({
     required this.id,
+    required this.user_id,
     required this.title,
     required this.body,
     required this.date,
@@ -19,7 +20,7 @@ class ActividadModelo {
 
   ActividadModelo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    //userId = json['user_id'];
+    user_id = json['user_id'];
     title = json['title'];
     body = json['body'];
     date = json['date'];
@@ -37,7 +38,7 @@ class ActividadModelo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    //data['user_id'] = this.userId;
+    data['user_id'] = this.user_id;
     data['title'] = this.title;
     data['body'] = this.body;
     data['date'] = this.date;
@@ -61,7 +62,7 @@ class RespActividadModelo {
   RespActividadModelo.unlaunched();
 
   RespActividadModelo.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
+    success = json['success'] == true.toString(); // Convertir a bool
     data = (json['data'] as List)
         .map((e) => ActividadModelo.fromJson(e as Map<String, dynamic>))
         .toList();
