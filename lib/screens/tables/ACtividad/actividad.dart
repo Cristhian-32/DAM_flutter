@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/activity_api.dart';
 import 'package:flutter_manager/models/ActividadModelo.dart';
 import 'package:flutter_manager/screens/drawner/AppBarAct.dart';
+import 'package:flutter_manager/screens/tables/ACtividad/ActividadEdit.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
+import 'package:local_auth/local_auth.dart';
 
 class ActividadScreen extends StatelessWidget {
+  late final LocalAuthentication auth;
+  bool _supportState = false;
   final List<Color> colors = [
     Color(0xFFC5E1A5), // Verde pastel
     Color(0xFFFFCC80), // Naranja pastel
@@ -92,6 +96,12 @@ class ActividadScreen extends StatelessWidget {
                     size: 24,
                   ),
                   onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ActividadFormEdit(modelA: actividadx)),
+                    );
                     // Acción al presionar el botón de más (+)
                     // Aquí puedes agregar la lógica para añadir
                   },
@@ -113,6 +123,7 @@ class ActividadScreen extends StatelessWidget {
                     size: 24,
                   ),
                   onPressed: () {
+                    Navigator.pushNamed(context, '/asistencia');
                     // Acción al presionar el botón de asistencia
                     // Aquí puedes agregar la lógica para registrar la asistencia
                   },
