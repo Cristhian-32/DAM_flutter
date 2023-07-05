@@ -18,6 +18,6 @@ abstract class UserApi {
   @POST("/api/auth/login")
   Future<TokenModel> login(@Body() UserModel user);
 
-  @POST("/api/auth/register")
+  @POST("/api/auth/register/user")
   Future<void> store(@Body() UserModel user);
 }

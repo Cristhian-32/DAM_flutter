@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/asistencia_api.dart';
 import 'package:flutter_manager/models/asistenciaModel.dart';
+
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
 
 class AsistenciaForm extends StatefulWidget {
+  final AsistenciaModel? asistencia;
+  AsistenciaForm({this.asistencia});
   @override
   _AsistenciaFormState createState() => _AsistenciaFormState();
+
 }
 
 class _AsistenciaFormState extends State<AsistenciaForm> {
@@ -15,6 +19,9 @@ class _AsistenciaFormState extends State<AsistenciaForm> {
   TextEditingController code = TextEditingController();
   TextEditingController level = TextEditingController();
 
+  @override
+  _AsistenciaFormState createState() => _AsistenciaFormState();
+  
   @override
   void dispose() {
     code.dispose();
@@ -34,19 +41,18 @@ class _AsistenciaFormState extends State<AsistenciaForm> {
       mp.activityId = activityId;
       mp.code = code.text;
       mp.level = level.text;
+      mp.date = "";
 
       var api = await Provider.of<AsistenciaApi>(context, listen: false)
           .store(TokenUtil.TOKEN, mp);
       print("ver: ${api.toJson()['success']}");
       if (api.toJson()['success'] == true) {
-        Navigator.pop(context, () {
-          setState(() {});
-        });
+        Navigator.pop(context, true); // Cambio aquí
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('No estan bien los datos de los campos!'),
+          content: Text('No están bien los datos de los campos!'),
         ),
       );
     }
@@ -99,7 +105,11 @@ class _AsistenciaFormState extends State<AsistenciaForm> {
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: _createAsistencia,
+                onPressed: () {
+                  setState(() {
+                    _createAsistencia();
+                  });
+                },
                 child: Text('Registrar'),
               ),
             ],

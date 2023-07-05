@@ -4,12 +4,12 @@ import 'package:flutter_manager/theme/AppTheme.dart';
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
-class HelpScreen extends StatefulWidget {
+class HelpScreenu extends StatefulWidget {
   @override
   _HelpScreenState createState() => _HelpScreenState();
 }
 
-class _HelpScreenState extends State<HelpScreen> {
+class _HelpScreenState extends State<HelpScreenu> {
   late final LocalAuthentication auth;
   bool _supportState = false;
 
@@ -54,7 +54,7 @@ class _HelpScreenState extends State<HelpScreen> {
                     top: MediaQuery.of(context).padding.top,
                     left: 16,
                     right: 16),
-                child: Image.asset('assets/imagen/user-login-icon.png'),
+                child: Image.asset('assets/user-login-icon.png'),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 8),

@@ -1,29 +1,28 @@
 class ActividadModelo {
   late int id = 0;
-  //late int userId;
+  late int user_id;
   late String title;
   late String body;
   late String date;
-  late String image;
+  //late String image;
   /*late List<AsistenciapaModelo> asistenciapas;*/
 
   ActividadModelo({
-    required this.id,
     required this.title,
     required this.body,
     required this.date,
-    required this.image,
+
     //required this.asistenciapas
   });
   ActividadModelo.unlaunched();
 
   ActividadModelo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    //userId = json['user_id'];
+    user_id = json['user_id'];
     title = json['title'];
     body = json['body'];
     date = json['date'];
-    image = json['image'];
+    //image = json['image'];
 
     /*if (json['asistenciapas'] != null) {
       asistenciapas = (json['asistenciapas'] as List)
@@ -37,11 +36,11 @@ class ActividadModelo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    //data['user_id'] = this.userId;
+    data['user_id'] = this.user_id;
     data['title'] = this.title;
     data['body'] = this.body;
     data['date'] = this.date;
-    data['image'] = this.image;
+    //data['image'] = this.image;
 
     /*if (this.asistenciapas != null) {
       data['asistenciapas'] =
@@ -56,22 +55,30 @@ class RespActividadModelo {
   late List<ActividadModelo> data;
   late String message;
 
-  RespActividadModelo(
-      {required this.success, required this.data, required this.message});
+  RespActividadModelo({
+    required this.success,
+    required this.data,
+    required this.message,
+  });
+
   RespActividadModelo.unlaunched();
 
   RespActividadModelo.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    data = (json['data'] as List)
-        .map((e) => ActividadModelo.fromJson(e as Map<String, dynamic>))
-        .toList();
+    if (json['data'] != null) {
+      data = List<ActividadModelo>.from(json['data'].map(
+        (item) => ActividadModelo.fromJson(item),
+      ));
+    } else {
+      data = [];
+    }
     message = json['message'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['success'] = this.success;
-    data['data'] = this.data.map((e) => e.toJson()).toList();
+    data['data'] = this.data.map((item) => item.toJson()).toList();
     data['message'] = this.message;
     return data;
   }
