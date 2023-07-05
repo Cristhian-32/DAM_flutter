@@ -58,7 +58,7 @@ class _UserApi implements UserApi {
     )
         .compose(
           _dio.options,
-          '/api/auth/register',
+          '/api/auth/register/user',
           queryParameters: queryParameters,
           data: _data,
         )
