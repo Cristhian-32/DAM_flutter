@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_manager/screens/login.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 
 class CustomNavBar extends StatefulWidget {
@@ -74,7 +75,9 @@ class _CustomNavBarState extends State<CustomNavBar> {
           ListTile(
             title: Text('Exit'),
             leading: Icon(Icons.exit_to_app),
-            onTap: () => null,
+            onTap: () {
+              LoginPage().logout(context);
+            },
           ),
         ],
       ),

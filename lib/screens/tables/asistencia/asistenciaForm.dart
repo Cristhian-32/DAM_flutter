@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_manager/apis/asistencia_api.dart';
 import 'package:flutter_manager/models/asistenciaModel.dart';
-import 'package:flutter_manager/screens/tables/actividad.dart';
+
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
 
 class AsistenciaForm extends StatefulWidget {
+  final AsistenciaModel? asistencia;
+  AsistenciaForm({this.asistencia});
   @override
   _AsistenciaFormState createState() => _AsistenciaFormState();
+
 }
 
 class _AsistenciaFormState extends State<AsistenciaForm> {
@@ -16,6 +19,9 @@ class _AsistenciaFormState extends State<AsistenciaForm> {
   TextEditingController code = TextEditingController();
   TextEditingController level = TextEditingController();
 
+  @override
+  _AsistenciaFormState createState() => _AsistenciaFormState();
+  
   @override
   void dispose() {
     code.dispose();

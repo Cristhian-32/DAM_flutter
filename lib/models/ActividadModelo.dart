@@ -1,6 +1,6 @@
 class ActividadModelo {
   late int id = 0;
-  //late int userId;
+  late int user_id;
   late String title;
   late String body;
   late String date;
@@ -8,18 +8,17 @@ class ActividadModelo {
   /*late List<AsistenciapaModelo> asistenciapas;*/
 
   ActividadModelo({
-    required this.id,
     required this.title,
     required this.body,
     required this.date,
-    required this.image,
+
     //required this.asistenciapas
   });
   ActividadModelo.unlaunched();
 
   ActividadModelo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    //userId = json['user_id'];
+    user_id = json['user_id'];
     title = json['title'];
     body = json['body'];
     date = json['date'];
@@ -37,7 +36,7 @@ class ActividadModelo {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    //data['user_id'] = this.userId;
+    data['user_id'] = this.user_id;
     data['title'] = this.title;
     data['body'] = this.body;
     data['date'] = this.date;
@@ -56,8 +55,12 @@ class RespActividadModelo {
   late List<ActividadModelo> data;
   late String message;
 
-  RespActividadModelo(
-      {required this.success, required this.data, required this.message});
+  RespActividadModelo({
+    required this.success,
+    required this.data,
+    required this.message,
+  });
+
   RespActividadModelo.unlaunched();
 
   RespActividadModelo.fromJson(Map<String, dynamic> json) {

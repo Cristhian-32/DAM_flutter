@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_manager/comp/CustomAppBar.dart';
 import 'package:flutter_manager/theme/AppTheme.dart';
 
@@ -42,7 +42,7 @@ class _HelpScreenState extends State<HelpScreen> {
                   top: MediaQuery.of(context).padding.top,
                   left: 16,
                   right: 16),
-              child: Image.asset('assets/user-login-icon.png'),
+              child: Image.asset('assets/imagen/user-login-icon.png'),
             ),
             Container(
               padding: const EdgeInsets.only(top: 8),
@@ -110,4 +110,4 @@ class _HelpScreenState extends State<HelpScreen> {
     ),
     );
   }
-}
+}*/
