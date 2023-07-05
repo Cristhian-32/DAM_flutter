@@ -24,6 +24,9 @@ void main() {
         Provider<ActividadApi>(
           create: (_) => ActividadApi.create(),
         ),
+        Provider<RecordApi>(
+          create: (_) => RecordApi.create(),
+        ),
       ],
       child: MyApp(),
     ),

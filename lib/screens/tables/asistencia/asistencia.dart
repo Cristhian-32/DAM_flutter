@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'dart:io';
 import 'package:flutter_manager/apis/asistencia_api.dart';
 import 'package:flutter_manager/models/asistenciaModel.dart';
@@ -62,33 +61,19 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
           ],
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-              onPressed: () {
-                exportAsistenciaToExcel(asistencia);
-                // Lógica para el segundo botón flotante
-              },
-              child: Icon(Icons.explicit_outlined, size: 40),
-              backgroundColor: Colors.green),
-          SizedBox(height: 10),
-          FloatingActionButton(
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AsistenciaForm(),
-                  ),
-                );
-                if (result == true) {
-                  setState(() {});
-                }
-              },
-              child: Icon(Icons.add),
-              backgroundColor: Colors.green),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final result = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AsistenciaForm(),
+            ),
+          );
+          if (result == true) {
+            setState(() {});
+          }
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

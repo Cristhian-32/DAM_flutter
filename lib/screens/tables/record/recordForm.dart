@@ -3,7 +3,6 @@ import 'package:flutter_manager/apis/asistencia_api.dart';
 import 'package:flutter_manager/apis/record_api.dart';
 import 'package:flutter_manager/models/RecordModel.dart';
 
-
 import 'package:flutter_manager/models/asistenciaModel.dart';
 
 import 'package:flutter_manager/util/TokenUtil.dart';
@@ -14,7 +13,6 @@ class RecordForm extends StatefulWidget {
   RecordForm({this.record});
   @override
   _RecordFormState createState() => _RecordFormState();
-
 }
 
 class _RecordFormState extends State<RecordForm> {
@@ -29,13 +27,11 @@ class _RecordFormState extends State<RecordForm> {
   TextEditingController date = TextEditingController();
   TextEditingController time = TextEditingController();
 
-
   @override
   _RecordFormState createState() => _RecordFormState();
 
   @override
   void dispose() {
-
     name.dispose();
     code.dispose();
     school.dispose();
@@ -43,8 +39,6 @@ class _RecordFormState extends State<RecordForm> {
     evidence.dispose();
     date.dispose();
     time.dispose();
-
-
 
     super.dispose();
   }
@@ -58,16 +52,13 @@ class _RecordFormState extends State<RecordForm> {
       );
       _formKey.currentState!.save();
       RecordModel mp = RecordModel.unlaunched();
-      mp.user_id = user_Id;
       mp.activity_id = activity_Id;
       mp.name = name.text;
       mp.code = code.text;
       mp.school = school.text;
       mp.level = level.text;
-      mp.evidence = evidence.text;
       mp.date = date.text;
       mp.time = time.text;
-
 
       var api = await Provider.of<RecordApi>(context, listen: false)
           .store(TokenUtil.TOKEN, mp);
@@ -97,20 +88,7 @@ class _RecordFormState extends State<RecordForm> {
           child: Column(
             children: [
               TextFormField(
-                decoration: InputDecoration(labelText: 'ID'),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingresa un ID válido';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  user_Id = int.tryParse(value!) ?? 0;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'ID'),
+                decoration: InputDecoration(labelText: 'Actividad'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -122,11 +100,9 @@ class _RecordFormState extends State<RecordForm> {
                   activity_Id = int.tryParse(value!) ?? 0;
                 },
               ),
-
-
               TextFormField(
                 controller: name,
-                decoration: InputDecoration(labelText: 'Código'),
+                decoration: InputDecoration(labelText: 'Nombre'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa un código válido';
@@ -136,7 +112,7 @@ class _RecordFormState extends State<RecordForm> {
               ),
               TextFormField(
                 controller: code,
-                decoration: InputDecoration(labelText: 'Código'),
+                decoration: InputDecoration(labelText: 'Códigode Estudiante'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa un código válido';
@@ -146,7 +122,7 @@ class _RecordFormState extends State<RecordForm> {
               ),
               TextFormField(
                 controller: school,
-                decoration: InputDecoration(labelText: 'Código'),
+                decoration: InputDecoration(labelText: 'Escuela Profesional'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa un código válido';
@@ -156,7 +132,7 @@ class _RecordFormState extends State<RecordForm> {
               ),
               TextFormField(
                 controller: level,
-                decoration: InputDecoration(labelText: 'Código'),
+                decoration: InputDecoration(labelText: 'Ciclo'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, ingresa un código válido';
@@ -164,38 +140,6 @@ class _RecordFormState extends State<RecordForm> {
                   return null;
                 },
               ),
-
-              TextFormField(
-                controller: evidence,
-                decoration: InputDecoration(labelText: 'Semestre'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingresa un semestre válido';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: date,
-                decoration: InputDecoration(labelText: 'Semestre'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingresa un semestre válido';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: time,
-                decoration: InputDecoration(labelText: 'Semestre'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, ingresa un semestre válido';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
                   setState(() {

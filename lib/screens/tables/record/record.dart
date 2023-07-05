@@ -90,41 +90,28 @@ class _RecordsScreenState extends State<RecordsScreen> {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text(
-                'Fecha: ${recordx.user_id}',
+                'Actividad: ${recordx.activity_id}',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
-                'Fecha: ${recordx.user_id}',
+                'Nombre: ${recordx.name}',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
-                'Fecha: ${recordx.activity_id}',
+                'Codigo: ${recordx.code}',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
-                'Fecha: ${recordx.name}',
+                'Escuela: ${recordx.school}',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
-                'Fecha: ${recordx.code}',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Fecha: ${recordx.level}',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Fecha: ${recordx.evidence}',
+                'ciclo: ${recordx.level}',
                 style: TextStyle(fontSize: 16),
               ),
               Text(
                 'Fecha: ${recordx.date}',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                'Fecha: ${recordx.time}',
                 style: TextStyle(fontSize: 16),
               ),
             ],
