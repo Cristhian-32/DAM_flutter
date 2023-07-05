@@ -22,7 +22,7 @@ abstract class AsistenciaApi {
   Future<RespAsistenciaModel> store(@Header("Authorization") String token,
       @Body() AsistenciaModel asistencia);
 
-  @DELETE("/api/act/{id}")
+  @DELETE("/api/asistencias/{id}")
   Future<RespAsistenciaModel> delete(
       @Header("Authorization") String token, @Path("id") int id);
 }

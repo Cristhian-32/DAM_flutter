@@ -90,7 +90,7 @@ class _AsistenciaApi implements AsistenciaApi {
     )
             .compose(
               _dio.options,
-              '/api/act/${id}',
+              '/api/asistencias/${id}',
               queryParameters: queryParameters,
               data: _data,
             )

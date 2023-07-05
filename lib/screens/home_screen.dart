@@ -3,6 +3,8 @@ import 'package:flutter_manager/screens/drawner/AppBar.dart';
 import 'package:flutter_manager/screens/drawner/NavBar.dart';
 import 'package:flutter_manager/screens/tables/ACtividad/actividad.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistencia.dart';
+import 'package:flutter_manager/screens/tables/asistencia/er.dart';
+import 'package:flutter_manager/ui/help_screen.dart';
 import 'package:flutter_manager/util/RoleUtil.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 
@@ -63,6 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   title: 'ASISTENCIA',
                   description: 'Podras LISTAR asistencia de tus eventos',
                   onPressed: () {
+                    print("object");
                     Navigator.push(
                       context,
                       MaterialPageRoute(
