@@ -7,6 +7,8 @@ import 'package:flutter_manager/models/asistenciaModel.dart';
 import 'package:flutter_manager/screens/tables/asistencia/asistenciaForm.dart';
 import 'package:flutter_manager/util/TokenUtil.dart';
 import 'package:provider/provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 class AsistenciaScreen extends StatefulWidget {
   const AsistenciaScreen({Key? key});
@@ -58,6 +60,16 @@ class _AsistenciaScreenState extends State<AsistenciaScreen> {
               },
               child: Text('Exportar a Excel'),
             ),
+            ElevatedButton(
+            onPressed: ()async{
+
+              final result = await FilePicker.platform.pickFiles();
+              List<String>? files = result?.files.map((e)=>e.path).cast<String>().toList();
+              if(files == null) return;
+              await Share.shareFiles(files); 
+
+            },
+            child: Text('pick file'))
           ],
         ),
       ),

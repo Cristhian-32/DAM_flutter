@@ -8,6 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:excel/excel.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'dart:io';
 
@@ -71,6 +73,8 @@ class _ActividadScreenState extends State<ActividadScreen> {
           elevation: 6.0,
           mini: false,
         ),
+
+        
       ),
     );
   }
@@ -153,6 +157,16 @@ class _ActividadScreenState extends State<ActividadScreen> {
                     // Aquí puedes agregar la lógica para registrar la asistencia
                   },
                 ),
+                ElevatedButton(
+            onPressed: ()async{
+
+              final result = await FilePicker.platform.pickFiles();
+              List<String>? files = result?.files.map((e)=>e.path).cast<String>().toList();
+              if(files == null) return;
+              await Share.shareFiles(files); 
+
+            },
+            child: Text('pick file'))
               ],
             ),
           ),
